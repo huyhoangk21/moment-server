@@ -8,7 +8,9 @@ const Creator_1 = require("../entity/Creator");
 const Snapshot_1 = require("../entity/Snapshot");
 const getAllSnapshots = async (_, res) => {
     try {
-        const allSnapshots = await Snapshot_1.Snapshot.find();
+        const allSnapshots = await Snapshot_1.Snapshot.find({
+            relations: ['creator', 'likes', 'likes.creator'],
+        });
         return res.status(200).json(allSnapshots);
     }
     catch (err) {
@@ -24,7 +26,7 @@ const getSnapshotsByCreator = async (req, res) => {
             return res.status(400).json({ errors: 'Creator is not found' });
         const snapshots = await Snapshot_1.Snapshot.find({
             where: { creator },
-            relations: ['creator'],
+            relations: ['creator', 'likes', 'likes.creator'],
         });
         return res.status(200).json(snapshots);
     }

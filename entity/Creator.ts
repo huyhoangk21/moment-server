@@ -6,6 +6,7 @@ import {
   BaseEntity,
   OneToMany,
   BeforeInsert,
+  Index,
 } from 'typeorm';
 import { Exclude, classToPlain } from 'class-transformer';
 import { IsEmail, MaxLength, MinLength } from 'class-validator';
@@ -24,6 +25,7 @@ export class Creator extends BaseEntity {
   @PrimaryGeneratedColumn()
   creator_id!: number;
 
+  @Index()
   @MaxLength(20, {
     message: 'Creator name must not be more than 20 characters',
   })
@@ -31,6 +33,7 @@ export class Creator extends BaseEntity {
   creator_name!: string;
 
   @Exclude()
+  @Index()
   @IsEmail()
   @Column({ unique: true })
   email!: string;

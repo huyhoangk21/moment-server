@@ -41,6 +41,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Creator.prototype, "creator_id", void 0);
 __decorate([
+    typeorm_1.Index(),
     class_validator_1.MaxLength(20, {
         message: 'Creator name must not be more than 20 characters',
     }),
@@ -49,6 +50,7 @@ __decorate([
 ], Creator.prototype, "creator_name", void 0);
 __decorate([
     class_transformer_1.Exclude(),
+    typeorm_1.Index(),
     class_validator_1.IsEmail(),
     typeorm_1.Column({ unique: true }),
     __metadata("design:type", String)

@@ -4,7 +4,9 @@ import { Snapshot } from '../entity/Snapshot';
 
 const getAllSnapshots = async (_: Request, res: Response): Promise<any> => {
   try {
-    const allSnapshots = await Snapshot.find();
+    const allSnapshots = await Snapshot.find({
+      relations: ['creator', 'likes', 'likes.creator'],
+    });
     return res.status(200).json(allSnapshots);
   } catch (err) {
     console.log(err);
@@ -23,7 +25,7 @@ const getSnapshotsByCreator = async (
       return res.status(400).json({ errors: 'Creator is not found' });
     const snapshots = await Snapshot.find({
       where: { creator },
-      relations: ['creator'],
+      relations: ['creator', 'likes', 'likes.creator'],
     });
     return res.status(200).json(snapshots);
   } catch (err) {

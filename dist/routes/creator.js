@@ -25,7 +25,11 @@ const register = async (req, res) => {
             errors.email = 'Email is already taken';
         if (Object.keys(errors).length > 0)
             return res.status(400).json({ errors });
-        const creator = new Creator_1.Creator({ creator_name, email, password });
+        const creator = new Creator_1.Creator({
+            creator_name,
+            email,
+            password,
+        });
         errors = await class_validator_1.validate(creator);
         if (errors.length > 0)
             return res.status(400).json({ errors });
@@ -34,7 +38,7 @@ const register = async (req, res) => {
     }
     catch (err) {
         console.log(err);
-        return res.status(500).json({ errors: err });
+        return res.status(500).json({ errors: 'Server side error' });
     }
 };
 const login = async (req, res) => {
@@ -69,7 +73,7 @@ const login = async (req, res) => {
 const me = (_, res) => {
     return res.status(200).json(res.locals.creator);
 };
-const logout = async (_, res) => {
+const logout = (_, res) => {
     const cookieOptions = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',

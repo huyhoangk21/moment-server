@@ -18,6 +18,7 @@ const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const Snapshot_1 = require("./Snapshot");
+const Like_1 = require("./Like");
 let Creator = class Creator extends typeorm_1.BaseEntity {
     constructor(creator) {
         super();
@@ -59,11 +60,13 @@ __decorate([
     __metadata("design:type", String)
 ], Creator.prototype, "password", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => Snapshot_1.Snapshot, snapshot => snapshot.creator, {
-        onDelete: 'CASCADE',
-    }),
+    typeorm_1.OneToMany(() => Snapshot_1.Snapshot, snapshot => snapshot.creator),
     __metadata("design:type", Array)
 ], Creator.prototype, "snapshots", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => Like_1.Like, like => like.creator),
+    __metadata("design:type", Array)
+], Creator.prototype, "likes", void 0);
 __decorate([
     typeorm_1.CreateDateColumn({ type: 'timestamp' }),
     __metadata("design:type", Date)

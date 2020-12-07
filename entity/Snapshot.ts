@@ -5,27 +5,40 @@ import {
   PrimaryGeneratedColumn,
   BaseEntity,
   ManyToOne,
+  OneToMany,
+  JoinColumn,
 } from 'typeorm';
+import { Exclude, classToPlain } from 'class-transformer';
 import { Creator } from './Creator';
+import { Like } from './Like';
 
-@Entity({ name: 'snapshots' })
+@Entity({
+  name: 'snapshots',
+  orderBy: {
+    created_at: 'DESC',
+  },
+})
 export class Snapshot extends BaseEntity {
-  constructor(snapshot: Snapshot) {
+  constructor(snapshot: Partial<Snapshot>) {
     super();
     Object.assign(this, snapshot);
   }
 
+  @Exclude()
   @PrimaryGeneratedColumn()
   snapshot_id!: number;
 
-  @ManyToOne(() => Creator, creator => creator.snapshots)
+  @ManyToOne(() => Creator, creator => creator.snapshots, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'creator_id' })
   creator!: Creator;
+
+  @OneToMany(() => Like, like => like.snapshot)
+  likes!: Like[];
 
   @Column()
   selected_file!: string;
-
-  @Column()
-  like_count!: number;
 
   @Column()
   title!: string;
@@ -38,4 +51,8 @@ export class Snapshot extends BaseEntity {
 
   @CreateDateColumn({ type: 'timestamp' })
   updated_at!: Date;
+
+  toJSON() {
+    return classToPlain(this);
+  }
 }

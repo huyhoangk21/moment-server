@@ -9,15 +9,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Snapshot = void 0;
-const typeorm_1 = require("typeorm");
+exports.Like = void 0;
 const class_transformer_1 = require("class-transformer");
+const typeorm_1 = require("typeorm");
 const Creator_1 = require("./Creator");
-const Like_1 = require("./Like");
-let Snapshot = class Snapshot extends typeorm_1.BaseEntity {
-    constructor(snapshot) {
+const Snapshot_1 = require("./Snapshot");
+let Like = class Like extends typeorm_1.BaseEntity {
+    constructor(like) {
         super();
-        Object.assign(this, snapshot);
+        Object.assign(this, like);
     }
     toJSON() {
         return class_transformer_1.classToPlain(this);
@@ -27,46 +27,30 @@ __decorate([
     class_transformer_1.Exclude(),
     typeorm_1.PrimaryGeneratedColumn(),
     __metadata("design:type", Number)
-], Snapshot.prototype, "snapshot_id", void 0);
+], Like.prototype, "like_id", void 0);
 __decorate([
-    typeorm_1.ManyToOne(() => Creator_1.Creator, creator => creator.snapshots, {
-        onDelete: 'CASCADE',
-    }),
+    typeorm_1.ManyToOne(() => Creator_1.Creator, creator => creator.likes, { onDelete: 'CASCADE' }),
     typeorm_1.JoinColumn({ name: 'creator_id' }),
     __metadata("design:type", Creator_1.Creator)
-], Snapshot.prototype, "creator", void 0);
+], Like.prototype, "creator", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => Like_1.Like, like => like.snapshot),
-    __metadata("design:type", Array)
-], Snapshot.prototype, "likes", void 0);
-__decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", String)
-], Snapshot.prototype, "selected_file", void 0);
-__decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", String)
-], Snapshot.prototype, "title", void 0);
-__decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", String)
-], Snapshot.prototype, "description", void 0);
-__decorate([
-    typeorm_1.CreateDateColumn({ type: 'timestamp' }),
-    __metadata("design:type", Date)
-], Snapshot.prototype, "created_at", void 0);
-__decorate([
-    typeorm_1.CreateDateColumn({ type: 'timestamp' }),
-    __metadata("design:type", Date)
-], Snapshot.prototype, "updated_at", void 0);
-Snapshot = __decorate([
-    typeorm_1.Entity({
-        name: 'snapshots',
-        orderBy: {
-            created_at: 'DESC',
-        },
+    typeorm_1.ManyToOne(() => Snapshot_1.Snapshot, snapshot => snapshot.likes, {
+        onDelete: 'CASCADE',
     }),
+    typeorm_1.JoinColumn({ name: 'snapshot_id' }),
+    __metadata("design:type", Snapshot_1.Snapshot)
+], Like.prototype, "snapshot", void 0);
+__decorate([
+    typeorm_1.CreateDateColumn({ type: 'timestamp' }),
+    __metadata("design:type", Date)
+], Like.prototype, "created_at", void 0);
+__decorate([
+    typeorm_1.CreateDateColumn({ type: 'timestamp' }),
+    __metadata("design:type", Date)
+], Like.prototype, "updated_at", void 0);
+Like = __decorate([
+    typeorm_1.Entity({ name: 'likes' }),
     __metadata("design:paramtypes", [Object])
-], Snapshot);
-exports.Snapshot = Snapshot;
-//# sourceMappingURL=Snapshot.js.map
+], Like);
+exports.Like = Like;
+//# sourceMappingURL=Like.js.map

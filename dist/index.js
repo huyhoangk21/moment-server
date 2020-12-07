@@ -11,13 +11,17 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 require("dotenv/config");
 const ormConfig_1 = __importDefault(require("./ormConfig"));
 const trim_1 = __importDefault(require("./middleware/trim"));
+const auth_1 = __importDefault(require("./middleware/auth"));
 const creator_1 = __importDefault(require("./routes/creator"));
+const snapshot_1 = __importDefault(require("./routes/snapshot"));
+const like_1 = __importDefault(require("./routes/like"));
 const app = express_1.default();
 app.use(morgan_1.default('dev'));
 app.use(express_1.default.json());
 app.use(cookie_parser_1.default());
 app.use(trim_1.default);
 app.use('/api/auth', creator_1.default);
+app.use('/api/snapshots', auth_1.default, snapshot_1.default, like_1.default);
 app.listen(process.env.PORT, async () => {
     console.log(`Server running on ${process.env.PORT}.`);
     try {

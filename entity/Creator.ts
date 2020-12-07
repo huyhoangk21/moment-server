@@ -11,6 +11,7 @@ import { Exclude, classToPlain } from 'class-transformer';
 import { IsEmail, MaxLength, MinLength } from 'class-validator';
 import bcrypt from 'bcryptjs';
 import { Snapshot } from './Snapshot';
+import { Like } from './Like';
 
 @Entity({ name: 'creators' })
 export class Creator extends BaseEntity {
@@ -39,10 +40,11 @@ export class Creator extends BaseEntity {
   @Column()
   password!: string;
 
-  @OneToMany(() => Snapshot, snapshot => snapshot.creator, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => Snapshot, snapshot => snapshot.creator)
   snapshots!: Snapshot[];
+
+  @OneToMany(() => Like, like => like.creator)
+  likes!: Like[];
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at!: Date;

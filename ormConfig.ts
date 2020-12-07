@@ -1,6 +1,7 @@
 import { ConnectionOptions } from 'typeorm';
 import { Creator } from './entity/Creator';
 import { Snapshot } from './entity/Snapshot';
+import { Like } from './entity/Like';
 
 export default {
   type: 'postgres',
@@ -11,7 +12,7 @@ export default {
   database: 'snapshot',
   synchronize: true,
   logging: false,
-  entities: [Creator, Snapshot],
+  entities: [Creator, Snapshot, Like],
   migrations: ['../migration/*.ts'],
   cli: {
     entitiesDir: '../entity',

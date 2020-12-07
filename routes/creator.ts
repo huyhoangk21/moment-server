@@ -21,7 +21,11 @@ const register = async (req: Request, res: Response): Promise<any> => {
 
     if (Object.keys(errors).length > 0) return res.status(400).json({ errors });
 
-    const creator: Creator = new Creator({ creator_name, email, password });
+    const creator: Creator = new Creator({
+      creator_name,
+      email,
+      password,
+    });
     errors = await validate(creator);
     if (errors.length > 0) return res.status(400).json({ errors });
 
@@ -29,7 +33,7 @@ const register = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({ creator });
   } catch (err) {
     console.log(err);
-    return res.status(500).json({ errors: err });
+    return res.status(500).json({ errors: 'Server side error' });
   }
 };
 
@@ -75,7 +79,7 @@ const me = (_: Request, res: Response): Response<any> => {
   return res.status(200).json(res.locals.creator);
 };
 
-const logout = async (_: Request, res: Response): Promise<any> => {
+const logout = (_: Request, res: Response): Response<any> => {
   const cookieOptions: CookieSerializeOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Creator_1 = require("./entity/Creator");
 const Snapshot_1 = require("./entity/Snapshot");
+const Like_1 = require("./entity/Like");
 exports.default = {
     type: 'postgres',
     host: process.env.DB_HOST,
@@ -11,7 +12,7 @@ exports.default = {
     database: 'snapshot',
     synchronize: true,
     logging: false,
-    entities: [Creator_1.Creator, Snapshot_1.Snapshot],
+    entities: [Creator_1.Creator, Snapshot_1.Snapshot, Like_1.Like],
     migrations: ['../migration/*.ts'],
     cli: {
         entitiesDir: '../entity',

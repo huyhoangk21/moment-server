@@ -8,33 +8,33 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const cookie_1 = __importDefault(require("cookie"));
 const class_validator_1 = require("class-validator");
 const auth_1 = __importDefault(require("../middleware/auth"));
-const Creator_1 = require("../entity/Creator");
+const User_1 = require("../entity/User");
 const register = async (req, res) => {
     try {
         let errors = {};
-        const { creator_name, email, password } = req.body;
-        const creatorByName = await Creator_1.Creator.findOne({
-            creator_name,
+        const { username, email, password } = req.body;
+        const userByName = await User_1.User.findOne({
+            username,
         });
-        const creatorByEmail = await Creator_1.Creator.findOne({
+        const userByEmail = await User_1.User.findOne({
             email,
         });
-        if (creatorByName)
-            errors.creator_name = 'Creator name is already taken';
-        if (creatorByEmail)
+        if (userByName)
+            errors.username = 'Username is already taken';
+        if (userByEmail)
             errors.email = 'Email is already taken';
         if (Object.keys(errors).length > 0)
             return res.status(400).json({ errors });
-        const creator = new Creator_1.Creator({
-            creator_name,
+        const user = new User_1.User({
+            username,
             email,
             password,
         });
-        errors = await class_validator_1.validate(creator);
+        errors = await class_validator_1.validate(user);
         if (errors.length > 0)
             return res.status(400).json({ errors });
-        await creator.save();
-        return res.status(200).json({ creator });
+        await user.save();
+        return res.status(200).json({ user });
     }
     catch (err) {
         console.log(err);
@@ -44,12 +44,12 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const creator = await Creator_1.Creator.findOne({ email });
-        if (!creator)
+        const user = await User_1.User.findOne({ email });
+        if (!user)
             return res.status(400).json({ errors: 'Incorrect username or password' });
-        if (!creator.matchPassword(password))
+        if (!user.matchPassword(password))
             return res.status(400).json({ errors: 'Incorrect username or password' });
-        const token = jsonwebtoken_1.default.sign({ creator_name: creator.creator_name }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const token = jsonwebtoken_1.default.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: '1d' });
         const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
@@ -57,7 +57,7 @@ const login = async (req, res) => {
             path: '/',
         };
         res.set('Set-Cookie', cookie_1.default.serialize('token', token, cookieOptions));
-        return res.status(200).json(creator);
+        return res.status(200).json(user);
     }
     catch (err) {
         console.log(err);
@@ -65,7 +65,7 @@ const login = async (req, res) => {
     }
 };
 const me = (_, res) => {
-    return res.status(200).json(res.locals.creator);
+    return res.status(200).json(res.locals.user);
 };
 const logout = (_, res) => {
     const cookieOptions = {
@@ -84,4 +84,4 @@ router.post('/login', login);
 router.get('/me', auth_1.default, me);
 router.get('/logout', auth_1.default, logout);
 exports.default = router;
-//# sourceMappingURL=creator.js.map
+//# sourceMappingURL=user.js.map

@@ -1,21 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { Creator } from '../entity/Creator';
+import { User } from '../entity/User';
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token: string | undefined = req.cookies.token;
     if (!token) throw new Error('Unauthenticated');
 
-    const { creator_name }: any = jwt.verify(
+    const { username }: any = jwt.verify(
       token,
       process.env.JWT_SECRET as string
     );
-    const creator: Creator | undefined = await Creator.findOne({
-      creator_name,
+    const user: User | undefined = await User.findOne({
+      username,
     });
-    if (!creator) throw new Error('Unauthenticated');
-    res.locals.creator = creator;
+    if (!user) throw new Error('Unauthenticated');
+    res.locals.user = user;
     next();
   } catch (err) {
     return res.status(401).json({ errors: err.message });

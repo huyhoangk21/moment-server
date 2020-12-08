@@ -5,18 +5,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const Like_1 = require("../entity/Like");
-const Snapshot_1 = require("../entity/Snapshot");
+const Moment_1 = require("../entity/Moment");
 const like = async (req, res) => {
     try {
-        const creator = res.locals.creator;
-        const { snapshot_id } = req.params;
-        const snapshot = await Snapshot_1.Snapshot.findOne(snapshot_id);
-        if (!snapshot)
-            return res.status(400).json({ errors: 'Snapshot is not found' });
-        let like = await Like_1.Like.findOne({ creator, snapshot }, { relations: ['creator', 'snapshot'] });
+        const user = res.locals.user;
+        const { moment_id } = req.params;
+        const moment = await Moment_1.Moment.findOne(moment_id);
+        if (!moment)
+            return res.status(400).json({ errors: 'Moment is not found' });
+        let like = await Like_1.Like.findOne({ user, moment }, { relations: ['user', 'moment'] });
         if (like)
-            return res.status(400).json({ errors: 'Snapshot is already liked' });
-        like = new Like_1.Like({ creator, snapshot });
+            return res.status(400).json({ errors: 'Moment is already liked' });
+        like = new Like_1.Like({ user, moment });
         await like.save();
         return res.status(200).json(like);
     }
@@ -27,14 +27,14 @@ const like = async (req, res) => {
 };
 const unlike = async (req, res) => {
     try {
-        const creator = res.locals.creator;
-        const { snapshot_id } = req.params;
-        const snapshot = await Snapshot_1.Snapshot.findOne(snapshot_id);
-        if (!snapshot)
-            return res.status(400).json({ errors: 'Snapshot is not found' });
-        let like = await Like_1.Like.findOne({ creator, snapshot }, { relations: ['creator', 'snapshot'] });
+        const user = res.locals.user;
+        const { moment_id } = req.params;
+        const moment = await Moment_1.Moment.findOne(moment_id);
+        if (!moment)
+            return res.status(400).json({ errors: 'Moment is not found' });
+        let like = await Like_1.Like.findOne({ user, moment }, { relations: ['user', 'moment'] });
         if (!like)
-            return res.status(400).json({ errors: 'Snapshot has not been liked' });
+            return res.status(400).json({ errors: 'Moment has not been liked' });
         await Like_1.Like.delete(like.like_id);
         return res.status(200).json({ success: true });
     }
@@ -44,7 +44,7 @@ const unlike = async (req, res) => {
     }
 };
 const router = express_1.default.Router();
-router.post('/:snapshot_id/like', like);
-router.delete('/:snapshot_id/like', unlike);
+router.post('/:moment_id/like', like);
+router.delete('/:moment_id/like', unlike);
 exports.default = router;
 //# sourceMappingURL=like.js.map

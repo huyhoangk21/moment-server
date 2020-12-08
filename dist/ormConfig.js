@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Creator_1 = require("./entity/Creator");
-const Snapshot_1 = require("./entity/Snapshot");
+const User_1 = require("./entity/User");
+const Moment_1 = require("./entity/Moment");
 const Like_1 = require("./entity/Like");
 exports.default = {
     type: 'postgres',
@@ -9,10 +9,10 @@ exports.default = {
     port: process.env.DB_PORT,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    database: 'snapshot',
+    database: 'moment',
     synchronize: true,
     logging: false,
-    entities: [Creator_1.Creator, Snapshot_1.Snapshot, Like_1.Like],
+    entities: [User_1.User, Moment_1.Moment, Like_1.Like],
     migrations: ['../migration/*.ts'],
     cli: {
         entitiesDir: '../entity',

@@ -3,59 +3,54 @@ import jwt from 'jsonwebtoken';
 import cookie, { CookieSerializeOptions } from 'cookie';
 import { validate } from 'class-validator';
 import auth from '../middleware/auth';
-import { Creator } from '../entity/Creator';
+import { User } from '../entity/User';
 
-const register = async (req: Request, res: Response): Promise<any> => {
+const register = async (req: Request, res: Response): Promise<Response> => {
   try {
     let errors: any = {};
-    const { creator_name, email, password }: Creator = req.body;
-    const creatorByName: Creator | undefined = await Creator.findOne({
-      creator_name,
+    const { username, email, password }: User = req.body;
+    const userByName: User | undefined = await User.findOne({
+      username,
     });
-    const creatorByEmail: Creator | undefined = await Creator.findOne({
+    const userByEmail: User | undefined = await User.findOne({
       email,
     });
 
-    if (creatorByName) errors.creator_name = 'Creator name is already taken';
-    if (creatorByEmail) errors.email = 'Email is already taken';
+    if (userByName) errors.username = 'Username is already taken';
+    if (userByEmail) errors.email = 'Email is already taken';
 
     if (Object.keys(errors).length > 0) return res.status(400).json({ errors });
 
-    const creator: Creator = new Creator({
-      creator_name,
+    const user: User = new User({
+      username,
       email,
       password,
     });
-    errors = await validate(creator);
+    errors = await validate(user);
     if (errors.length > 0) return res.status(400).json({ errors });
 
-    await creator.save();
-    return res.status(200).json({ creator });
+    await user.save();
+    return res.status(200).json({ user });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ errors: 'Server side error' });
   }
 };
 
-const login = async (req: Request, res: Response): Promise<any> => {
+const login = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { creator_name, email, password }: Creator = req.body;
-    let creator: Creator | undefined;
-    if (creator_name) {
-      creator = await Creator.findOne({ creator_name });
-    }
-    if (email) {
-      creator = await Creator.findOne({ email });
-    }
+    const { email, password }: User = req.body;
 
-    if (!creator)
+    const user: User | undefined = await User.findOne({ email });
+
+    if (!user)
       return res.status(400).json({ errors: 'Incorrect username or password' });
 
-    if (!creator.matchPassword(password))
+    if (!user.matchPassword(password))
       return res.status(400).json({ errors: 'Incorrect username or password' });
 
     const token: string = jwt.sign(
-      { creator_name: creator.creator_name },
+      { username: user.username },
       process.env.JWT_SECRET as string,
       { expiresIn: '1d' }
     );
@@ -68,18 +63,18 @@ const login = async (req: Request, res: Response): Promise<any> => {
     };
 
     res.set('Set-Cookie', cookie.serialize('token', token, cookieOptions));
-    return res.status(200).json(creator);
+    return res.status(200).json(user);
   } catch (err) {
     console.log(err);
     return res.status(500).json({ errors: 'Server side error' });
   }
 };
 
-const me = (_: Request, res: Response): Response<any> => {
-  return res.status(200).json(res.locals.creator);
+const me = (_: Request, res: Response): Response => {
+  return res.status(200).json(res.locals.user);
 };
 
-const logout = (_: Request, res: Response): Response<any> => {
+const logout = (_: Request, res: Response): Response => {
   const cookieOptions: CookieSerializeOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',

@@ -11,26 +11,26 @@ import {
 import { Exclude, classToPlain } from 'class-transformer';
 import { IsEmail, MaxLength, MinLength } from 'class-validator';
 import bcrypt from 'bcryptjs';
-import { Snapshot } from './Snapshot';
+import { Moment } from './Moment';
 import { Like } from './Like';
 
-@Entity({ name: 'creators' })
-export class Creator extends BaseEntity {
-  constructor(creator: Partial<Creator>) {
+@Entity({ name: 'users' })
+export class User extends BaseEntity {
+  constructor(user: Partial<User>) {
     super();
-    Object.assign(this, creator);
+    Object.assign(this, user);
   }
 
   @Exclude()
   @PrimaryGeneratedColumn()
-  creator_id!: number;
+  user_id!: number;
 
   @Index()
   @MaxLength(20, {
-    message: 'Creator name must not be more than 20 characters',
+    message: 'Username must not be more than 20 characters',
   })
   @Column({ unique: true })
-  creator_name!: string;
+  username!: string;
 
   @Exclude()
   @Index()
@@ -43,10 +43,10 @@ export class Creator extends BaseEntity {
   @Column()
   password!: string;
 
-  @OneToMany(() => Snapshot, snapshot => snapshot.creator)
-  snapshots!: Snapshot[];
+  @OneToMany(() => Moment, moment => moment.user)
+  moments!: Moment[];
 
-  @OneToMany(() => Like, like => like.creator)
+  @OneToMany(() => Like, like => like.user)
   likes!: Like[];
 
   @CreateDateColumn({ type: 'timestamp' })

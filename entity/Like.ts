@@ -7,8 +7,8 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Creator } from './Creator';
-import { Snapshot } from './Snapshot';
+import { User } from './User';
+import { Moment } from './Moment';
 
 @Entity({ name: 'likes' })
 export class Like extends BaseEntity {
@@ -21,15 +21,15 @@ export class Like extends BaseEntity {
   @PrimaryGeneratedColumn()
   like_id!: number;
 
-  @ManyToOne(() => Creator, creator => creator.likes, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'creator_id' })
-  creator!: Creator;
+  @ManyToOne(() => User, user => user.likes, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
+  user!: User;
 
-  @ManyToOne(() => Snapshot, snapshot => snapshot.likes, {
+  @ManyToOne(() => Moment, moment => moment.likes, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'snapshot_id' })
-  snapshot!: Snapshot;
+  @JoinColumn({ name: 'moment_id' })
+  moment!: Moment;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at!: Date;

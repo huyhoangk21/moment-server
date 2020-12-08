@@ -9,32 +9,32 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Exclude, classToPlain } from 'class-transformer';
-import { Creator } from './Creator';
+import { User } from './User';
 import { Like } from './Like';
 
 @Entity({
-  name: 'snapshots',
+  name: 'moments',
   orderBy: {
     created_at: 'DESC',
   },
 })
-export class Snapshot extends BaseEntity {
-  constructor(snapshot: Partial<Snapshot>) {
+export class Moment extends BaseEntity {
+  constructor(moment: Partial<Moment>) {
     super();
-    Object.assign(this, snapshot);
+    Object.assign(this, moment);
   }
 
   @Exclude()
   @PrimaryGeneratedColumn()
-  snapshot_id!: number;
+  moment_id!: number;
 
-  @ManyToOne(() => Creator, creator => creator.snapshots, {
+  @ManyToOne(() => User, user => user.moments, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'creator_id' })
-  creator!: Creator;
+  @JoinColumn({ name: 'user_id' })
+  user!: User;
 
-  @OneToMany(() => Like, like => like.snapshot)
+  @OneToMany(() => Like, like => like.moment)
   likes!: Like[];
 
   @Column()

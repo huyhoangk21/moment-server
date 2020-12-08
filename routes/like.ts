@@ -1,23 +1,22 @@
 import express, { Router, Request, Response } from 'express';
 import { Like } from '../entity/Like';
-import { Creator } from '../entity/Creator';
-import { Snapshot } from '../entity/Snapshot';
+import { User } from '../entity/User';
+import { Moment } from '../entity/Moment';
 
-const like = async (req: Request, res: Response): Promise<any> => {
+const like = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const creator: Creator = res.locals.creator;
-    const { snapshot_id }: any = req.params;
-    const snapshot: Snapshot | undefined = await Snapshot.findOne(snapshot_id);
-    if (!snapshot)
-      return res.status(400).json({ errors: 'Snapshot is not found' });
+    const user: User = res.locals.user;
+    const { moment_id }: any = req.params;
+    const moment: Moment | undefined = await Moment.findOne(moment_id);
+    if (!moment) return res.status(400).json({ errors: 'Moment is not found' });
     let like: Like | undefined = await Like.findOne(
-      { creator, snapshot },
-      { relations: ['creator', 'snapshot'] }
+      { user, moment },
+      { relations: ['user', 'moment'] }
     );
     if (like)
-      return res.status(400).json({ errors: 'Snapshot is already liked' });
+      return res.status(400).json({ errors: 'Moment is already liked' });
 
-    like = new Like({ creator, snapshot });
+    like = new Like({ user, moment });
     await like.save();
     return res.status(200).json(like);
   } catch (err) {
@@ -26,19 +25,18 @@ const like = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-const unlike = async (req: Request, res: Response) => {
+const unlike = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const creator: Creator = res.locals.creator;
-    const { snapshot_id }: any = req.params;
-    const snapshot: Snapshot | undefined = await Snapshot.findOne(snapshot_id);
-    if (!snapshot)
-      return res.status(400).json({ errors: 'Snapshot is not found' });
+    const user: User = res.locals.user;
+    const { moment_id }: any = req.params;
+    const moment: Moment | undefined = await Moment.findOne(moment_id);
+    if (!moment) return res.status(400).json({ errors: 'Moment is not found' });
     let like: Like | undefined = await Like.findOne(
-      { creator, snapshot },
-      { relations: ['creator', 'snapshot'] }
+      { user, moment },
+      { relations: ['user', 'moment'] }
     );
     if (!like)
-      return res.status(400).json({ errors: 'Snapshot has not been liked' });
+      return res.status(400).json({ errors: 'Moment has not been liked' });
 
     await Like.delete(like.like_id);
     return res.status(200).json({ success: true });
@@ -49,6 +47,6 @@ const unlike = async (req: Request, res: Response) => {
 };
 
 const router: Router = express.Router();
-router.post('/:snapshot_id/like', like);
-router.delete('/:snapshot_id/like', unlike);
+router.post('/:moment_id/like', like);
+router.delete('/:moment_id/like', unlike);
 export default router;

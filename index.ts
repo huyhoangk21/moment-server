@@ -25,8 +25,8 @@ const io = require('socket.io')(http, {
 
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(morgan('dev'));
-app.use(bodyParser.json({ limit: '5mb' }));
-app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
+app.use(bodyParser.json({ limit: '2mb' }));
+app.use(bodyParser.urlencoded({ limit: '2mb', extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.set('socketio', io);

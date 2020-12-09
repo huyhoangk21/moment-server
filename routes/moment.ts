@@ -1,4 +1,5 @@
 import express, { Router, Request, Response } from 'express';
+import io from '../middleware/io';
 import { User } from '../entity/User';
 import { Moment } from '../entity/Moment';
 
@@ -77,9 +78,10 @@ const deleteMoment = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const router: Router = express();
+
 router.get('/', getAllMoments);
 router.get('/users/:user_id', getMomentsByUser);
-router.post('/', addMoment);
-router.delete('/:moment_id', deleteMoment);
+router.post('/', io, addMoment);
+router.delete('/:moment_id', io, deleteMoment);
 
 export default router;

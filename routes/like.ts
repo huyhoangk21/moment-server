@@ -1,4 +1,5 @@
 import express, { Router, Request, Response } from 'express';
+import io from '../middleware/io';
 import { Like } from '../entity/Like';
 import { User } from '../entity/User';
 import { Moment } from '../entity/Moment';
@@ -47,6 +48,8 @@ const unlike = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const router: Router = express.Router();
-router.post('/:moment_id/like', like);
-router.delete('/:moment_id/like', unlike);
+
+router.post('/:moment_id/like', io, like);
+router.post('/:moment_id/unlike', io, unlike);
+
 export default router;

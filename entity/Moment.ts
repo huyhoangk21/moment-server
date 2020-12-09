@@ -24,7 +24,6 @@ export class Moment extends BaseEntity {
     Object.assign(this, moment);
   }
 
-  @Exclude()
   @PrimaryGeneratedColumn()
   moment_id!: number;
 

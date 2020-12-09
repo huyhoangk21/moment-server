@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const io_1 = __importDefault(require("../middleware/io"));
 const Like_1 = require("../entity/Like");
 const Moment_1 = require("../entity/Moment");
 const like = async (req, res) => {
@@ -44,7 +45,7 @@ const unlike = async (req, res) => {
     }
 };
 const router = express_1.default.Router();
-router.post('/:moment_id/like', like);
-router.delete('/:moment_id/like', unlike);
+router.post('/:moment_id/like', io_1.default, like);
+router.post('/:moment_id/unlike', io_1.default, unlike);
 exports.default = router;
 //# sourceMappingURL=like.js.map

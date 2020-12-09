@@ -26,8 +26,8 @@ export class User extends BaseEntity {
   user_id!: number;
 
   @Index()
-  @MaxLength(20, {
-    message: 'Username must not be more than 20 characters',
+  @MaxLength(10, {
+    message: 'Username must not be more than 10 characters',
   })
   @Column({ unique: true })
   username!: string;

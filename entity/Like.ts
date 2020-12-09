@@ -17,7 +17,6 @@ export class Like extends BaseEntity {
     Object.assign(this, like);
   }
 
-  @Exclude()
   @PrimaryGeneratedColumn()
   like_id!: number;
 

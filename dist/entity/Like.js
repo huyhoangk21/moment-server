@@ -24,7 +24,6 @@ let Like = class Like extends typeorm_1.BaseEntity {
     }
 };
 __decorate([
-    class_transformer_1.Exclude(),
     typeorm_1.PrimaryGeneratedColumn(),
     __metadata("design:type", Number)
 ], Like.prototype, "like_id", void 0);

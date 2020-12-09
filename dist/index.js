@@ -8,6 +8,7 @@ const typeorm_1 = require("typeorm");
 const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 require("dotenv/config");
 const ormConfig_1 = __importDefault(require("./ormConfig"));
@@ -17,14 +18,19 @@ const user_1 = __importDefault(require("./routes/user"));
 const moment_1 = __importDefault(require("./routes/moment"));
 const like_1 = __importDefault(require("./routes/like"));
 const app = express_1.default();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 app.use(cors_1.default({ origin: 'http://localhost:3000', credentials: true }));
 app.use(morgan_1.default('dev'));
+app.use(body_parser_1.default.json({ limit: '5mb' }));
+app.use(body_parser_1.default.urlencoded({ limit: '5mb', extended: true }));
 app.use(express_1.default.json());
 app.use(cookie_parser_1.default());
+app.set('socketio', io);
 app.use(trim_1.default);
 app.use('/api/auth', user_1.default);
-app.use('/api/snapshots', auth_1.default, moment_1.default, like_1.default);
-app.listen(process.env.PORT, async () => {
+app.use('/api/moments', auth_1.default, moment_1.default, like_1.default);
+http.listen(process.env.PORT, async () => {
     console.log(`Server running on ${process.env.PORT}.`);
     try {
         await typeorm_1.createConnection(ormConfig_1.default);

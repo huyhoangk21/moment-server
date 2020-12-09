@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const io_1 = __importDefault(require("../middleware/io"));
 const User_1 = require("../entity/User");
 const Moment_1 = require("../entity/Moment");
 const getAllMoments = async (_, res) => {
@@ -84,7 +85,7 @@ const deleteMoment = async (req, res) => {
 const router = express_1.default();
 router.get('/', getAllMoments);
 router.get('/users/:user_id', getMomentsByUser);
-router.post('/', addMoment);
-router.delete('/:moment_id', deleteMoment);
+router.post('/', io_1.default, addMoment);
+router.delete('/:moment_id', io_1.default, deleteMoment);
 exports.default = router;
 //# sourceMappingURL=moment.js.map

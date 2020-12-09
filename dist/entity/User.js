@@ -42,8 +42,8 @@ __decorate([
 ], User.prototype, "user_id", void 0);
 __decorate([
     typeorm_1.Index(),
-    class_validator_1.MaxLength(20, {
-        message: 'Username must not be more than 20 characters',
+    class_validator_1.MaxLength(10, {
+        message: 'Username must not be more than 10 characters',
     }),
     typeorm_1.Column({ unique: true }),
     __metadata("design:type", String)

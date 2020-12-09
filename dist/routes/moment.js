@@ -7,7 +7,8 @@ const express_1 = __importDefault(require("express"));
 const io_1 = __importDefault(require("../middleware/io"));
 const User_1 = require("../entity/User");
 const Moment_1 = require("../entity/Moment");
-const getAllMoments = async (_, res) => {
+const typeorm_1 = require("typeorm");
+const getAllMoments = async (req, res) => {
     try {
         const allMoments = await Moment_1.Moment.find({
             relations: ['user', 'likes', 'likes.user'],
@@ -21,12 +22,17 @@ const getAllMoments = async (_, res) => {
 };
 const getMomentsByUser = async (req, res) => {
     try {
-        const { user_id } = req.params;
-        const user = await User_1.User.findOne(user_id);
-        if (!user)
+        const { username } = req.params;
+        const users = await User_1.User.find({
+            where: {
+                username: typeorm_1.Like(`%${username}%`),
+            },
+        });
+        const userIds = users.map(user => user.user_id);
+        if (!users)
             return res.status(400).json({ errors: 'User is not found' });
         const moments = await Moment_1.Moment.find({
-            where: { user },
+            where: { user: typeorm_1.In(userIds) },
             relations: ['user', 'likes', 'likes.user'],
         });
         return res.status(200).json(moments);
@@ -84,7 +90,7 @@ const deleteMoment = async (req, res) => {
 };
 const router = express_1.default();
 router.get('/', getAllMoments);
-router.get('/users/:user_id', getMomentsByUser);
+router.get('/users/:username', getMomentsByUser);
 router.post('/', io_1.default, addMoment);
 router.delete('/:moment_id', io_1.default, deleteMoment);
 exports.default = router;

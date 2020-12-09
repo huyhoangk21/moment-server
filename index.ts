@@ -17,7 +17,11 @@ import { Server } from 'http';
 const app: Express = express();
 
 const http: Server = require('http').createServer(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+  cors: {
+    origin: 'http://localhost:3000',
+  },
+});
 
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(morgan('dev'));

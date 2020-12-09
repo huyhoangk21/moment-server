@@ -19,7 +19,11 @@ const moment_1 = __importDefault(require("./routes/moment"));
 const like_1 = __importDefault(require("./routes/like"));
 const app = express_1.default();
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+    cors: {
+        origin: 'http://localhost:3000',
+    },
+});
 app.use(cors_1.default({ origin: 'http://localhost:3000', credentials: true }));
 app.use(morgan_1.default('dev'));
 app.use(body_parser_1.default.json({ limit: '5mb' }));
